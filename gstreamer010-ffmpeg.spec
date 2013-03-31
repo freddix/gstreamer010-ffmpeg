@@ -6,15 +6,16 @@
 Summary:	GStreamer Streaming-media framework plug-in using FFmpeg
 Name:		gstreamer010-ffmpeg
 Version:	0.10.13
-Release:	5
+Release:	6
 License:	GPL v2+
 Group:		Libraries
 Source0:	http://gstreamer.freedesktop.org/src/gst-ffmpeg/%{gstname}-%{version}.tar.bz2
 # Source0-md5:	7f5beacaf1312db2db30a026b36888c4
+Patch0:		h264_qpel_mmx.patch
 URL:		http://gstreamer.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	libav-devel
+#BuildRequires:	libav-devel
 BuildRequires:	gstreamer-plugins-base-devel
 BuildRequires:	libtool
 BuildRequires:	pkg-config
@@ -37,6 +38,7 @@ popular multimedia formats.
 
 %prep
 %setup -qn %{gstname}-%{version}
+%patch0 -p1
 
 sed -i -e 's|sleep 15||' configure.ac
 
@@ -48,7 +50,8 @@ sed -i -e 's|sleep 15||' configure.ac
 %{__automake}
 %configure \
 	--disable-static 	\
-	--with-system-ffmpeg
+	--with-ffmpeg-extra-configure="--enable-runtime-cpudetect"
+#	--with-system-ffmpeg
 %{__make} V=1
 
 %install
